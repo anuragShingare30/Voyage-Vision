@@ -1,65 +1,69 @@
 "use client"
 
 
-import {Tourinfo} from "./Tourinfo";
-import { useMutation, useQueryClient} from '@tanstack/react-query';
+import { Tourinfo } from "./Tourinfo";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { generateTourResponse, createNewTour, getExistingTour } from "../utils/actions";
 import toast from "react-hot-toast";
-import {getExistingTour, generateTourResponse, createNewTour} from "../utils/actions";
-import prisma from "../utils/db";
-
 
 function NewTour() {
 
-    let {mutate, isPending, data:tour} = useMutation({
-        mutationFn: async (destination)=>{
-            let newTour = await generateTourResponse(destination);
-            console.log(data);
-            if(newTour){
-                return newTour;
+
+    let { mutate, isPending, data:tour } = useMutation({
+        mutationFn: async (query) => {
+            let result = await generateTourResponse(query);
+            if (result) {
+                console.log(result);
+                return result;
             }
-            
-            toast.error("An error occured!!");
-            console.log(error);
-            
-            
+            else {
+                toast.error("No matching city found...");
+            }
         },
-        
+        onSuccess: (data) => {
+            if (!data) {
+                toast.error("No matching city found...");
+            }
+        },
+        onError: () => {
+            toast.error("An error occured...");
+        }
     });
 
 
-    function handleSubmit(e){
+    function handleSubmit(e) {
         e.preventDefault();
-        let formData = new FormData(e.currentTarget);   
+        let formData = new FormData(e.currentTarget);
         let destination = Object.fromEntries(formData.entries());
-        console.log(destination);
         mutate(destination);
-        
+        console.log(destination);
     };
-   
-    if(isPending){
-        return (
-            <div className="loading loading-dots loading-lg"></div>
-        );  
-    };
+
+    if (isPending) {
+        return <div>
+            <span className="loading loading-infinity loading-lg"></span>
+        </div>
+
+    }
 
     return (
         <div>
             <form onSubmit={handleSubmit}>
                 <h1 className="text-4xl">Select Your Destination</h1>
                 <div className="join mt-8 p-4 mb-8 w-full">
-                    <input 
-                        className="input input-bordered join-item w-full" 
-                        placeholder="Enter City" 
+                    <input
+                        className="input input-bordered join-item w-full"
+                        placeholder="Enter City"
                         name="city"
                         required
                     />
-                    <input 
-                        className="input input-bordered join-item w-full" 
-                        placeholder="Enter Country" 
+                    <input
+                        className="input input-bordered join-item w-full"
+                        placeholder="Enter Country"
                         name="country"
                         required
                     />
-                    <button 
+                    <button
                         className="btn btn-success join-item rounded-r-full w-28"
                         type="submit"
                         disabled={isPending}
@@ -68,9 +72,9 @@ function NewTour() {
                     </button>
                 </div>
             </form>
-            
+
             <div className="mt-5">
-                {tour ? <Tourinfo tour={tour}></Tourinfo> : <h1 className="text-3xl">Tour Info Page</h1>}
+            {tour ? <Tourinfo tour={tour} /> : null}
             </div>
         </div>
     );

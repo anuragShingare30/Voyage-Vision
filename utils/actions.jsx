@@ -3,51 +3,74 @@
 // THIS IS THE BASIC SETUP TO USE OPEN AI API. PROVIDING API KEY.
 import OpenAI from "openai";
 import prisma from "./db";
+import axios from "axios";
 
 let openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 
 
-// THIS IS THE FUNCTION REQUIRED TO ASK QUESTION TO AI AND GET RESPONSE IN JS OBJECT.
-async function generateChatResponse(chatMessages) {
-    try {
-        let response = await openai.chat.completions.create({
-            messages: [
-                ...chatMessages,
-            ],
-            model: "gpt-3.5-turbo",
-            temperature: 0,
-        });
-        console.log(response);
-        // Ensure the response is a plain object
-        return {
-            role: response.choices[0].message.role,
-            content: response.choices[0].message.content
-        };
-    } catch (error) {
-        return { error: error.message };
-    }
-};
+// async function generateChatResponse(chatMessages) {
+//     try {
+//         let response = await openai.chat.completions.create({
+//             messages: [
+//                 ...chatMessages,
+//             ],
+//             model: "gpt-3.5-turbo",
+//             temperature: 0,
+//         });
+//         console.log(response);
+//         // Ensure the response is a plain object
+//         return {
+//             role: response.choices[0].message.role,
+//             content: response.choices[0].message.content
+//         };
+//     } catch (error) {
+//         return { error: error.message };
+//     }
+// };
 
 // ---------------------------------------------------
 
-async function getExistingTour({ city, country }) {
+// THIS IS THE FUNCTION REQUIRED TO ASK QUESTION TO AI AND GET RESPONSE.
+async function getChatResponse(text) {
     try {
-        let result = await prisma.tour.findUnique({
-            where:{
-                city_country:{
-                    city,
-                    country
-                }
+        const options = {
+            method: 'POST',
+            url: 'https://chatgpt-42.p.rapidapi.com/chatgpt',
+            headers: {
+                'x-rapidapi-key': '87b8df551amsh57ed1ac56ba1c0dp18c0a1jsne005c9326516',
+                'x-rapidapi-host': 'chatgpt-42.p.rapidapi.com',
+                'Content-Type': 'application/json'
             },
-        });
-        return result;
+            data: {
+                messages: [
+                    { role: "user", content: text },
+                ],
+                web_access: false
+            }
+        };
+        const response = await axios.request(options);
+        console.log(response.data);
+        return response.data
     }
     catch (error) {
-        throw new Error("An error occured")
-    };
+        console.error(error);
+    }
+}
+
+// ----------------------------------------------------------------
+
+
+
+
+
+
+async function getExistingTour({ city, country }) {
+
 };
+
+
 
 
 
@@ -70,52 +93,42 @@ Once you have a list, create a one-day tour. Response should be in the following
 If you can't find info on exact ${city}, or ${city} does not exist, or it's population is less than 1, or it is not located in the following ${country} return { "tour": null }, with no additional characters.`;
 
 
-
-    try {
-        const response = await openai.chat.completions.create({
-            model: "gpt-3.5-turbo",
+    try{
+        const options = {
+        method: 'POST',
+        url: 'https://chatgpt-42.p.rapidapi.com/chatgpt',
+        headers: {
+            'x-rapidapi-key': '8d6e9a79f8msha0e5ad28b2c517bp1d9c70jsn4f90ddabc039',
+            'x-rapidapi-host': 'chatgpt-42.p.rapidapi.com',
+            'Content-Type': 'application/json'
+        },
+        data: {
             messages: [
-                { role: "system", content: "You are a user guide!!!" },
-                { role: "user", content: query },
+                {role:'user', content:query},
             ],
-            temperature: 1,
-            // max_tokens: 256,
-            // top_p: 1,
-            // frequency_penalty: 0,
-            // presence_penalty: 0,
-        });
-        let result = JSON.parse(response.choices[0].content);
-        console.log(result);
-        if (!result) {
-            console.log(error);
-            return error;
+            web_access: false
         }
-        else {
-            return result;
-        };
+    };
+        const response = await axios.request(options);
+        const result = response.data;
+        return result;
     }
-    catch (error) {
-        console.log(error);
-        return null;
+     catch (error) {
+        console.error(error);
     }
-
 };
+
 
 // --------------------------------------------------------------
 
+
 async function createNewTour(tour) {
-    try{
-        return await prisma.tour.create({
-            data:{
-                tour,
-            }
-        });
-    }
-    catch(error){
-        throw new Error("An error occured");
-    }
+
 };
 
 
 
-export { generateChatResponse, getExistingTour, generateTourResponse, createNewTour };
+
+
+
+export { getExistingTour, generateTourResponse, createNewTour, getChatResponse };

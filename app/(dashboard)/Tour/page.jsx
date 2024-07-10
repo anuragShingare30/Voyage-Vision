@@ -1,13 +1,12 @@
-import React from "react";
+"use client";
 
-async function TourPage(){
-    await new Promise((resolve)=>{setTimeout(resolve,1000)});
 
+
+function TourPage() {
+    
     return (
-        <div>
-            <h1 className="text-2xl">Tour Page</h1>
-        </div>
+        <h1 className="text-3xl">Tour Page</h1>
     );
-};
+}
 
-export default TourPage; 
+export default TourPage;

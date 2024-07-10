@@ -22,6 +22,7 @@
     "react-icons": "^5.2.1"
   },
   "devDependencies": {
+    "@gradio/client": "^1.2.1",
     "@tailwindcss/typography": "^0.5.13",
     "@types/react": "18.3.3",
     "daisyui": "^4.12.10",
