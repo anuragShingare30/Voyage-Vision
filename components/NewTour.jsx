@@ -14,7 +14,7 @@ function NewTour() {
             let result = await generateTourResponse(query);
             if (result) {
                 console.log(result);
-                return result;
+                return result; 
             }
             else {
                 toast.error("No matching city found...");
@@ -25,9 +25,6 @@ function NewTour() {
                 toast.error("No matching city found...");
             }
         },
-        onError: () => {
-            toast.error("An error occured...");
-        }
     });
 
 
@@ -41,7 +38,7 @@ function NewTour() {
 
     if (isPending) {
         return <div>
-            <span className="loading loading-infinity loading-lg"></span>
+            <span className="loading loading-dots loading-lg"></span>
         </div>
 
     }

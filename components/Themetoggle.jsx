@@ -2,8 +2,7 @@
 import { LuSunMedium } from "react-icons/lu";
 import { IoMoonOutline } from "react-icons/io5";
 import React from "react";
-{/* <IoMoonOutline />
-<LuSunMedium /> */}
+
 
 let themes = {
         lemonade: "lemonade",

@@ -76,44 +76,54 @@ async function getExistingTour({ city, country }) {
 
 // THIS IS THE FUNCTION REQUIRED TO RETURN RESPONSE OF OUR TOUR BY INPUT CITY AND COUNTRY.
 
+// 7 API CALLS
 async function generateTourResponse({ city, country }) {
 
-    let query = `Find a ${city} in this ${country}.
+    let query = ` Find a ${city} in this ${country}.
 If ${city} in this ${country} exists, create a list of things families can do in this ${city},${country}. 
 Once you have a list, create a one-day tour. Response should be in the following JSON format: 
 {
   "tour": {
-    "city": "${city}",
+    "city": "${city}", 
     "country": "${country}",
     "title": "title of the tour",
     "description": "description of the city and tour",
     "stops": ["short paragraph on the stop 1 ", "short paragraph on the stop 2","short paragraph on the stop 3"]
   }
 }
-If you can't find info on exact ${city}, or ${city} does not exist, or it's population is less than 1, or it is not located in the following ${country} return { "tour": null }, with no additional characters.`;
+If you can't find info on exact ${city}, or ${city} does not exist, or it's population is less than 1, or it is not located in the following ${country} return { "tour": null },with no additional characters.`;
 
 
-    try{
+    try {
         const options = {
-        method: 'POST',
-        url: 'https://chatgpt-42.p.rapidapi.com/chatgpt',
-        headers: {
-            'x-rapidapi-key': '8d6e9a79f8msha0e5ad28b2c517bp1d9c70jsn4f90ddabc039',
-            'x-rapidapi-host': 'chatgpt-42.p.rapidapi.com',
-            'Content-Type': 'application/json'
-        },
-        data: {
-            messages: [
-                {role:'user', content:query},
-            ],
-            web_access: false
-        }
-    };
+            method: 'POST',
+            url: 'https://chatgpt-42.p.rapidapi.com/matag2',
+            headers: {
+                'x-rapidapi-key': '8d6e9a79f8msha0e5ad28b2c517bp1d9c70jsn4f90ddabc039',
+                'x-rapidapi-host': 'chatgpt-42.p.rapidapi.com',
+                'Content-Type': 'application/json'
+            },
+            data: {
+                messages: [
+                    {
+                        role: 'user',
+                        content: query
+                    }
+                ],
+                web_access: false
+            }
+        };
         const response = await axios.request(options);
-        const result = response.data;
-        return result;
+        const result = response.data.result;
+
+        // Extracting the JSON part from the response
+        const jsonResponseMatch = result.match(/```json\n({.*?})\n```/s);
+        const jsonResponse = jsonResponseMatch ? JSON.parse(jsonResponseMatch[1]) : { tour: null };
+
+        console.log(jsonResponse);
+        return jsonResponse;
     }
-     catch (error) {
+    catch (error) {
         console.error(error);
     }
 };

@@ -30,7 +30,7 @@ function Chat() {
     });
 
     const handleSubmit = (e) => {
-        e.preventDefault();
+        e.preventDefault(); 
         setMessages((prevMessages) => [...prevMessages, { role: 'user', content: text }]);
         mutateFunc(text);
         setText("");
