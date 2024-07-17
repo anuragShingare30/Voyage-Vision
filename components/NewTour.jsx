@@ -8,23 +8,29 @@ import toast from "react-hot-toast";
 
 function NewTour() {
 
+    let queryClient = useQueryClient();
 
-    let { mutate, isPending, data:tour } = useMutation({
+    let { mutate, isPending, data:tour } = useMutation({ 
         mutationFn: async (query) => {
+            let existingTour = await getExistingTour(query); 
+            // HERE IF, TOUR EXIST IN OUR DATABASE THEN RETURN THE TOUR RESPONSE
+            // ELSE, CREATE TOUR RESPONSE AS WELL STORE NEW TOUR IN OUR DATABASE.
+            if(existingTour) {
+                return existingTour;
+            };
             let result = await generateTourResponse(query);
             if (result) {
                 console.log(result);
+                await createNewTour(result);
+                // queryClient.invalidateQueries({queryKey:['tours']});
                 return result; 
-            }
-            else {
-                toast.error("No matching city found...");
             }
         },
         onSuccess: (data) => {
             if (!data) {
                 toast.error("No matching city found...");
             }
-        },
+        }, 
     });
 
 
