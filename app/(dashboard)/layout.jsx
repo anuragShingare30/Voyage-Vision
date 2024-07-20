@@ -1,6 +1,6 @@
 import { Sidebar } from "../../components/Sidebar";
 import { CiMenuFries } from "react-icons/ci";
-import { RiOpenaiFill } from "react-icons/ri";
+
 
 function LayoutPage({ children }) {
 
@@ -15,6 +15,7 @@ function LayoutPage({ children }) {
                 <CiMenuFries className="text-2xl"/>
                 </label>
             </div>
+
             <div className="drawer-side">
                 <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay"></label>
                 <div className=" menu bg-base-200 text-base-content min-h-full w-80 p-6">
@@ -22,6 +23,7 @@ function LayoutPage({ children }) {
                 </div>
                
             </div>
+
         </div>
     );
 };

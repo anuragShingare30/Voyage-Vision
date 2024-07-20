@@ -16,6 +16,9 @@ function Navlink(){
             <Link href='/Profile'>
                 <button className="btn  btn-ghost w-full text-xl capitalize">Profile</button>
             </Link>
+            <Link href='/ChatBot'>
+                <button className="btn  btn-ghost w-full text-xl capitalize">ChatBot</button>
+            </Link>
         </div>
     );
 };

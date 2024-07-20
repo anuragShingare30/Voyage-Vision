@@ -16,8 +16,8 @@ const SingleTourPage = async ({ params }) => {
 
 
     if (!tour.image || tour.image.length === 0) {
-        let result = await getCityImages(tour.city);
-
+        let result = await getCityImages(tour.city); 
+        console.log(result);
         // Save the images array to Prisma
         await prisma.tour.update({
             where: {
@@ -43,7 +43,7 @@ const SingleTourPage = async ({ params }) => {
                 <div className="carousel carousel-center rounded-box gap-5">
 
                     {
-                        tour.image.map((image) => {
+                        tour.image ? tour.image.map((image) => {
                             return (
                                 <div className="carousel-item">
                                     <img
@@ -52,19 +52,35 @@ const SingleTourPage = async ({ params }) => {
                                         height={300}
                                         className='rounded-xl shadow-xl mb-16 h-96 w-96 object-cover'
                                         alt={image.title}
-                                        priority
+                                        priority="true"
                                     />
                                 </div>
                             );
-                        })
+                        }) : null
+                        
                     }
 
 
                 </div>
             </div>
-
-            <div className='tour-content'>
-                <Tourinfo tour={tour} ></Tourinfo>
+            
+            <div className='tour-content flex flex-col items-start gap-5'>
+                {/* <Tourinfo tour={tour} ></Tourinfo> */}
+                <h1 className='text-4xl font-semibold'>{tour.city},{tour.country}</h1>
+                <p className='leading-10 mb-1 text-3xl'>{tour.title}</p>
+                <p className=' mb-2 text-xl'>{tour.description}</p>
+                {
+                    tour.stops.map((stop, index) => {
+                        return (
+                            <div tabIndex={0} className="collapse collapse-arrow border-base-300 bg-base-200 border" key={index}>
+                                <div className="collapse-title text-xl font-medium">{`Stop ${index + 1}`}</div>
+                                <div className="collapse-content">
+                                    <p>{stop}</p>
+                                </div>
+                            </div>
+                        );
+                    })
+                }
             </div>
         </div>
     )

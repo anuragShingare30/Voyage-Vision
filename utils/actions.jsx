@@ -4,11 +4,12 @@
 import OpenAI from "openai";
 import prisma from "./db";
 import axios from "axios";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 let openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
-
+// Access your API key as an environment variable
 
 // async function generateChatResponse(chatMessages) {
 //     try {
@@ -59,6 +60,39 @@ async function getChatResponse(text) {
     }
 }
 
+
+async function chatResponse(prompt) {
+    // Access your API key as an environment variable
+    const genAI = new GoogleGenerativeAI(process.env.API_KEY);
+    try {
+        // Choose a model that's appropriate for your use case.
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+        const result = await model.generateContent({
+            contents: [
+                {
+                    role: 'user',
+                    parts: [
+                        {
+                            text: prompt,
+                        }
+                    ],
+                }
+            ],
+            generationConfig: {
+                maxOutputTokens: 1000,
+                temperature: 0.1,
+            },
+        });
+        // console.log(result.response.text());
+        console.log(result.response.candidates[0].content.parts[0].text);
+        return (result.response.candidates[0]);
+    }
+    catch (error) {
+        console.log(error);
+    }
+};
+
 // ----------------------------------------------------------------
 
 
@@ -86,41 +120,27 @@ If you can't find info on exact ${city}, or ${city} does not exist, or it's popu
     try {
         const options = {
             method: 'POST',
-            url: 'https://chat-gpt26.p.rapidapi.com/',
+            url: 'https://chatgpt-api8.p.rapidapi.com/',
             headers: {
-                'x-rapidapi-key': '8d6e9a79f8msha0e5ad28b2c517bp1d9c70jsn4f90ddabc039',
-                'x-rapidapi-host': 'chat-gpt26.p.rapidapi.com',
+                'x-rapidapi-key': '87b8df551amsh57ed1ac56ba1c0dp18c0a1jsne005c9326516',
+                'x-rapidapi-host': 'chatgpt-api8.p.rapidapi.com',
                 'Content-Type': 'application/json'
             },
-            data: {
-                model: 'gpt-3.5-turbo',
-                messages: [
-                    {
-                        role: 'user',
-                        content: query
-                    }
-                ],
-                web_access: false
-            }
+            data: [
+                {
+                    content: query,
+                    role: 'user',
+                },
+            ]
         };
         const response = await axios.request(options);
-        console.log(response.data);
-        // Extracting the JSON part from the response
-        // const jsonResponseMatch = result.match(/```json\n({.*?})\n```/s);
-        // const jsonResponse = jsonResponseMatch ? JSON.parse(jsonResponseMatch[1]) : { tour: null };
-        // console.log(jsonResponse);
-        // if (jsonResponse.tour) {
-        //     return {
-        //         city: jsonResponse.tour.city,
-        //         country: jsonResponse.tour.country,
-        //         title: jsonResponse.tour.title,
-        //         description: jsonResponse.tour.description,
-        //         stops: jsonResponse.tour.stops
-        //     };
-        // } 
-        // else {
-        //     return null;
-        // };
+        const result = response.data;
+        // const parsedData = JSON.parse(result.text);
+        // console.log(parsedData);
+        // console.log(result.text);
+        const jsonResponse = JSON.parse(result.text);
+        console.log(jsonResponse);
+        return jsonResponse;
     }
     catch (error) {
         console.error(error);
@@ -155,7 +175,13 @@ async function getExistingTour({ city, country }) {
 // THIS FUNCTION WILL CREATE NEW TOUR ,IF THE TOUR DOES NOT EXIST IN OUR DATABASE.
 async function createNewTour(tour) {
     try {
-        return await prisma.tour.create({
+        // Validate input
+        if (!tour.city || !tour.country || !tour.title || !tour.description || !tour.stops) {
+            throw new Error("Invalid tour data");
+        }
+
+        // Create the new tour
+        const newTour = await prisma.tour.create({
             data: {
                 city: tour.city,
                 country: tour.country,
@@ -164,13 +190,14 @@ async function createNewTour(tour) {
                 stops: tour.stops,
             }
         });
-    }
-    catch (error) {
-        console.log(error);
-        // throw new Error("Failed to create new tour");
-    }
 
+        return newTour;
+    } catch (error) {
+        console.error('Error creating new tour:', error);
+        throw new Error("Failed to create new tour");
+    }
 };
+
 
 // THIS FUNCTION IS USED IN SEARCH FUNCTIONALITY. TO SEARCH ANY SPECIFIC CITY OR COUNTRY BASED ON USER INPUT.
 async function getAllTours(searchTerm) {
@@ -237,8 +264,12 @@ async function getCityImages(city) {
                 safe_search: 'off',
                 region: 'us'
             },
+            // headers: {
+            //     'x-rapidapi-key': '8d6e9a79f8msha0e5ad28b2c517bp1d9c70jsn4f90ddabc039',
+            //     'x-rapidapi-host': 'real-time-image-search.p.rapidapi.com'
+            // }
             headers: {
-                'x-rapidapi-key': '8d6e9a79f8msha0e5ad28b2c517bp1d9c70jsn4f90ddabc039',
+                'x-rapidapi-key': 'ca247490e0msh82af7d8aa5d332bp1e61b0jsn03bb3d3e856a',
                 'x-rapidapi-host': 'real-time-image-search.p.rapidapi.com'
             }
         };
@@ -251,8 +282,55 @@ async function getCityImages(city) {
 }
 
 
+async function generateTour({ city, country }) {
+    // Access your API key as an environment variable
+    const genAI = new GoogleGenerativeAI(process.env.OPENAPI_KEY);
+    try {
+        // Using `responseMimeType` requires one of the Gemini 1.5 Pro or 1.5 Flash models
+        let model = genAI.getGenerativeModel({
+            model: "gemini-1.5-flash",
+            // Set the `responseMimeType` to output JSON
+            generationConfig: { responseMimeType: "application/json" }
+        });
 
-export { getExistingTour, generateTourResponse, createNewTour, getChatResponse, getAllTours, getTour, getCityImages };
+        let prompt = ` Find a ${city} in this ${country}.
+    If ${city} in this ${country} exists, create a list of things families can do in this ${city},${country}. 
+    Once you have a list, create a one-day tour. Response should be in the following JSON format: 
+    {
+      tour: {
+        "city": ${city}, 
+        "country": "${country}",
+        "title": "title of the tour",
+        "description": "description of the city and tour",
+        "stops": ["short paragraph on the stop 1 ", "short paragraph on the stop 2","short paragraph on the stop 3"],
+      };
+    }
+    If you can't find info on exact ${city}, or ${city} does not exist, or it's population is less than 1, or it is not located in the following ${country} return { "tour": null },with no additional characters.`
+
+        let result = await model.generateContent(prompt);
+        // let data = JSON.parse(result.response.candidates[0].content.parts[0]);
+        let data = result.response.candidates[0].content.parts[0]
+        console.log(data);
+        return data;
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
+
+
+export { getExistingTour, generateTourResponse, createNewTour, getChatResponse, getAllTours, getTour, getCityImages, chatResponse, generateTour };
+
+
+
+
+
+
+
+
+
+
 
 
 

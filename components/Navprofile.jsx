@@ -7,7 +7,7 @@ async function Navprofile(){
     // console.log(user.fullName);
 
     return (
-        <div className="px-4 flex items-center gap-2 relative top-48">
+        <div className="px-4 flex items-center gap-2 relative top-32">
              {/* After SignOut we will redirect to ' redirectUrl '  */}
             <UserButton afterSwitchSessionUrl="/"></UserButton>
             <div> 

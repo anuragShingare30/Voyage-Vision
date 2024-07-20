@@ -11,14 +11,15 @@ const TourPage = () => {
   let { data, isPending } = useQuery({
     queryKey: ['tours', search],
     // This is an arrow function that returns the result of calling getAllTours()
-    queryFn: () => getAllTours(search),
+    queryFn: () => 
+      getAllTours(search), 
   }); 
 
   
 
   return (
     <div>
-      <form>
+      <form> 
         <div className='join mt-4 mb-16 w-full'>
           <input 
             type="text" 
@@ -35,6 +36,7 @@ const TourPage = () => {
           >
             {isPending ? "Please wait..." : "Search"}
           </button>
+          
         </div>
       </form>
       {

@@ -3,7 +3,7 @@ import {TourCard} from "./TourCard";
 
 const TourList = ({data}) => {
   return (
-    <div className='flex flex-row gap-10'>
+    <div className='grid grid-cols-4 gap-10'>
       {
         data.map((tour)=>{
             return (

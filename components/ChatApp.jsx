@@ -1,19 +1,41 @@
 "use client";
 import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import {getChatResponse, chatResponse} from "../utils/actions"
+import { chatResponse} from "../utils/actions"
 import toast from "react-hot-toast";
 
 // THIS IS THE LIVE CHAT APPLICATION FOR OUR APP.  
 
+// {
+//     candidates: [
+//       {
+//         content: [Object],
+//         finishReason: 'STOP',
+//         index: 0,
+//         safetyRatings: [Array]
+//       }
+//     ],
+//     usageMetadata: { promptTokenCount: 7, candidatesTokenCount: 9, totalTokenCount: 16 },
+//     text: [Function (anonymous)],
+//     functionCall: [Function (anonymous)],
+//     functionCalls: [Function (anonymous)]
+// }
+
+
+// {
+//     result: "Thank you! I'm here to help you with any questions or tasks you have. Please let me know how I can assist you today.",
+//     status: true,
+//     server_code: 1
+// }
+
 // 10 API calls
 
-function Chat() {
+function ChatApp() {
     const [text, setText] = useState("");
     const [messages, setMessages] = useState([]);
 
     const { mutate: mutateFunc, isPending } = useMutation({
-        mutationFn: async (text) => await getChatResponse(text),
+        mutationFn: async (text) => await chatResponse(text),
         onSuccess: (data) => {
             if (!data) {
                 toast.error("Error Occurred..."); 
@@ -21,8 +43,8 @@ function Chat() {
             }
             toast.success("Answered!!!");
             // Assuming result is the key holding the chat response
-            const { result } = data; 
-            setMessages((prevMessages) => [...prevMessages, { role: 'bot', content: result }]);
+             let result = data.content.parts[0].text;
+            setMessages((prevMessages) => [...prevMessages, { role: 'bot', parts:[{text : result}]}]);
         },
         onError: () => {
             toast.error("Error Occurred...");
@@ -31,7 +53,7 @@ function Chat() {
 
     const handleSubmit = (e) => {
         e.preventDefault(); 
-        setMessages((prevMessages) => [...prevMessages, { role: 'user', content: text }]);
+        setMessages((prevMessages) => [...prevMessages, { role: 'user', parts: [{text:text}] }]);
         mutateFunc(text);
         setText("");
         console.log(messages);
@@ -53,7 +75,7 @@ function Chat() {
                         return (
                             <div key={index} className={`flex flex-row gap-5 mt-6 leading-loose border-b border-base-300 ${bcg}`}>
                                 <p className="text-xl m-3">{avatar}</p>
-                                <p className={`text-xl m-3`}>{message.content}</p>
+                                <p className={`text-xl m-3`}>{message.parts[0].text}</p>
                             </div>
                         );
                     })
@@ -88,28 +110,6 @@ function Chat() {
     );
 }
 
-export {Chat};
+export {ChatApp};
 
 
-
-// {
-//     candidates: [
-//       {
-//         content: [Object],
-//         finishReason: 'STOP',
-//         index: 0,
-//         safetyRatings: [Array]
-//       }
-//     ],
-//     usageMetadata: { promptTokenCount: 7, candidatesTokenCount: 9, totalTokenCount: 16 },
-//     text: [Function (anonymous)],
-//     functionCall: [Function (anonymous)],
-//     functionCalls: [Function (anonymous)]
-// }
-
-
-// {
-//     result: "Thank you! I'm here to help you with any questions or tasks you have. Please let me know how I can assist you today.",
-//     status: true,
-//     server_code: 1
-// }

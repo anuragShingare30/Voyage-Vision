@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import {TourPage} from "../../../components/TourPage";
+import {TourPage} from "../../../components/TourPage"; 
 import {
     dehydrate,
     HydrationBoundary,

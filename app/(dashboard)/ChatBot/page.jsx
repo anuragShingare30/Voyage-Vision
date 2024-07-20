@@ -1,23 +1,22 @@
 import React from "react";
-import { Chat } from "../../../components/Chat"
+import {ChatApp} from "../../../components/ChatApp";
 import {
     dehydrate,
     HydrationBoundary,
     QueryClient,
 } from '@tanstack/react-query';
 
-async function ChatPage() {
-    await new Promise((resolve) => { setTimeout(resolve, 1000) }); 
+async function ChatBot() {
+    await new Promise((resolve) => { setTimeout(resolve, 1000) });
 
     // THIS WILL CREATE NEW QUERY CLIENT.
     const queryClient = new QueryClient();
     
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
-            {/* CONTENT/COMPONENTS SHOULD BE WRAP BETWEEN THIS BOUNDARY. */}
-            <Chat />
+            <ChatApp></ChatApp>
         </HydrationBoundary>
     );
 };
 
-export default ChatPage;  
+export default ChatBot;  

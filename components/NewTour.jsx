@@ -3,12 +3,12 @@
 
 import { Tourinfo } from "./Tourinfo";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { generateTourResponse, createNewTour, getExistingTour } from "../utils/actions";
+import { generateTourResponse, createNewTour, getExistingTour,generateTour } from "../utils/actions";
 import toast from "react-hot-toast";
 
 function NewTour() {
 
-    let queryClient = useQueryClient();
+    let queryClient = useQueryClient(); 
 
     let { mutate, isPending, data:tour } = useMutation({ 
         mutationFn: async (query) => {
@@ -18,12 +18,12 @@ function NewTour() {
             if(existingTour) {
                 return existingTour;
             };
-            let result = await generateTourResponse(query);
-            if (result) {
-                console.log(result);
-                await createNewTour(result);
-                // queryClient.invalidateQueries({queryKey:['tours']});
-                return result; 
+            let result = await generateTour(query);
+            let jsonResponse = JSON.parse(result.text);
+            if (jsonResponse && jsonResponse.tour) {
+                await createNewTour(jsonResponse.tour);
+                queryClient.invalidateQueries({queryKey:['tours']});
+                return jsonResponse; 
             }
         },
         onSuccess: (data) => {
@@ -39,7 +39,6 @@ function NewTour() {
         let formData = new FormData(e.currentTarget);
         let destination = Object.fromEntries(formData.entries());
         mutate(destination);
-        console.log(destination);
     };
 
     if (isPending) {
@@ -84,3 +83,33 @@ function NewTour() {
 }
 
 export { NewTour };
+
+
+
+
+
+
+
+
+// {
+//     parts: [
+//       {
+//         text: `{
+//             "tour": 
+//                     {
+//                 "city": "Mumbai", 
+//                 "country": "India", 
+//                 "title": "A Day in Vibrant Mumbai", 
+//                 "description": "Experience the energy and diversity of Mumbai, India's bustling financial and cultural hub. This tour will take you through iconic landmarks, vibrant markets, and delicious street food, showcasing the city's unique charm.", 
+//                 "stops": [
+//                     "Start your day at the Gateway of India, a majestic arch built in 1924, marking the entrance to Mumbai harbor. Explore the nearby Taj Mahal Palace Hotel, a historic landmark known for its elegance and grandeur.", 
+//                     "Wander through the bustling streets of Colaba Causeway, a popular shopping destination with a mix of traditional crafts, souvenirs, and street food. Enjoy a delicious lunch at one of the many restaurants offering local specialties.", 
+//                     "Immerse yourself in the vibrant atmosphere of Dhobi Ghat, the world's largest open-air laundry. Witness the fascinating process of washing and drying clothes, a unique spectacle showcasing Mumbai's bustling life."
+//                 ]
+//                     }
+//                 }
+//                     \n`
+//       }
+//     ],
+//     role: 'model'
+//   }
