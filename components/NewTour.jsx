@@ -18,6 +18,7 @@ function NewTour() {
             if(existingTour) {
                 return existingTour;
             };
+            
             let result = await generateTour(query);
             let jsonResponse = JSON.parse(result.text);
             if (jsonResponse && jsonResponse.tour) {
