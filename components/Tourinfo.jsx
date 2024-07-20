@@ -44,7 +44,7 @@ async function Tourinfo({ tour }) {
                         <div tabIndex={0} className="collapse collapse-arrow border-base-300 bg-base-200 border" key={index}>
                             <div className="collapse-title text-xl font-medium">{`Stop ${index + 1}`}</div>
                             <div className="collapse-content">
-                                <p>{stop}</p>
+                                <p className="text-xl">{stop}</p>
                             </div>
                         </div>
                     );
