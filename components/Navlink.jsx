@@ -4,9 +4,12 @@ function Navlink(){
 
     return (
         <div className="flex  flex-col  gap-6">
-            <Link href='/Chat'>
-                <button className="btn btn-ghost w-full text-xl capitalize ">Chat</button>
+             <Link href='/ChatBot'>
+                <button className="btn  btn-ghost w-full text-xl capitalize">ChatBot</button>
             </Link>
+            {/* <Link href='/Chat'>
+                <button className="btn btn-ghost w-full text-xl capitalize ">Chat</button>
+            </Link> */}
             <Link href='/Tour'>
                 <button className="btn  btn-ghost w-full text-xl capitalize">Tour</button>
             </Link>
@@ -16,9 +19,7 @@ function Navlink(){
             <Link href='/Profile'>
                 <button className="btn  btn-ghost w-full text-xl capitalize">Profile</button>
             </Link>
-            <Link href='/ChatBot'>
-                <button className="btn  btn-ghost w-full text-xl capitalize">ChatBot</button>
-            </Link>
+           
         </div>
     );
 };

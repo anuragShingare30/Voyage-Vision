@@ -28,7 +28,6 @@ import toast from "react-hot-toast";
 //     server_code: 1
 // }
 
-// 10 API calls
 
 function ChatApp() {
     const [text, setText] = useState("");
