@@ -1,11 +1,11 @@
 "use client";
 import React, { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query"; 
 import {getChatResponse, chatResponse} from "../utils/actions"
 import toast from "react-hot-toast";
 
 // THIS IS THE LIVE CHAT APPLICATION FOR OUR APP.  
-
+ 
 // 10 API calls
 
 function Chat() {
@@ -14,7 +14,7 @@ function Chat() {
 
     const { mutate: mutateFunc, isPending } = useMutation({
         mutationFn: async (text) => await getChatResponse(text),
-        onSuccess: (data) => {
+        onSuccess: (data) => { 
             if (!data) {
                 toast.error("Error Occurred..."); 
                 return;
@@ -42,9 +42,9 @@ function Chat() {
     };
 
     return (
-        <div className="min-h-[calc(100vh-6rem)] grid grid-rows-[1fr,auto]">
+        <div className="min-h-[calc(100vh-6rem)] grid grid-rows-[1fr,auto]"> 
             <div>
-                <h1 className="text-3xl relative bottom-7">Voyage Vision</h1>
+                <h1 className="text-3xl relative bottom-7">Voyage Vision</h1> 
                 {
                     messages.map((message, index) => {
 

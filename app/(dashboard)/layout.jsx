@@ -10,7 +10,7 @@ function LayoutPage({ children }) {
             
             <div className="drawer-content px-12 py-12">
             
-                {children}
+                {children} 
                 <label htmlFor="my-drawer-2" className="drawer-button lg:hidden fixed top-3 right-6">
                 <CiMenuFries className="text-2xl"/>
                 </label>
@@ -19,7 +19,7 @@ function LayoutPage({ children }) {
             <div className="drawer-side">
                 <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay"></label>
                 <div className=" menu bg-base-200 text-base-content min-h-full w-80 p-6">
-                    <Sidebar></Sidebar>
+                    <Sidebar></Sidebar> 
                 </div>
                
             </div>
@@ -28,4 +28,4 @@ function LayoutPage({ children }) {
     );
 };
 
-export default LayoutPage;
+export default LayoutPage; 

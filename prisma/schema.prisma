@@ -28,4 +28,4 @@ model Tour {
   updatedAt DateTime @default(now())
   @@unique([city,country])
 }
- 
+  

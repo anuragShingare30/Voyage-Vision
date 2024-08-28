@@ -18,7 +18,7 @@ function Tour() {
     // The 'preFetchQuery' IS IMPORTANT IN 'usequery'. THOUGH WE ARE FETCHING THE DATA IN 'TourPage' COMPONENT.
     queryClient.prefetchQuery({
         queryKey:['tours', ''],
-        queryFn: ()=>  getAllTours(),
+        queryFn: async ()=> await getAllTours(),
     });
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>

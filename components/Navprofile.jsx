@@ -20,4 +20,4 @@ async function Navprofile(){
     );
 };
 
-export {Navprofile};
+export {Navprofile}; 

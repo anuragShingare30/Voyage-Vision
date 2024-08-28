@@ -15,7 +15,7 @@ function HomePage(){
         </p>
         <Link href="/Chat">
           <button className="btn btn-primary">Get Started</button>
-        </Link>
+        </Link> 
         
       </div>
     </div>

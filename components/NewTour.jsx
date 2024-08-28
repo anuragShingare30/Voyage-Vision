@@ -24,7 +24,7 @@ function NewTour() {
             if (jsonResponse && jsonResponse.tour) {
                 await createNewTour(jsonResponse.tour);
                 queryClient.invalidateQueries({queryKey:['tours']});
-                return jsonResponse; 
+                return jsonResponse;  
             }
         },
         onSuccess: (data) => {

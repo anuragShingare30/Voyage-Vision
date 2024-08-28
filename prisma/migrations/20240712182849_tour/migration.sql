@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "Tour" ALTER COLUMN "stops" SET DATA TYPE TEXT;

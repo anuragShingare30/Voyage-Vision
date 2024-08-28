@@ -61,7 +61,7 @@ async function generateTour({ city, country }) {
             generationConfig: { responseMimeType: "application/json" }
         });
 
-        let prompt = ` Find a ${city} in this ${country}.
+        let prompt = `Find a ${city} in this ${country}.
     If ${city} in this ${country} exists, create a list of things families can do in this ${city},${country}. 
     Once you have a list, create a one-day tour. Response should be in the following JSON format: 
     {
@@ -70,11 +70,11 @@ async function generateTour({ city, country }) {
         "country": "${country}",
         "title": "title of the tour",
         "description": "description of the city and tour",
-        "stops": ["stop name", "stop name","stop name"],
+        "stops": ["stop name", "stop name","stop name"], 
       };
     }
     If you can't find info on exact ${city}, or ${city} does not exist, or it's population is less than 1, or it is not located in the following ${country} return { "tour": null },with no additional characters.`
-
+ 
         let result = await model.generateContent(prompt);
         // let data = JSON.parse(result.response.candidates[0].content.parts[0]);
         let data = result.response.candidates[0].content.parts[0]

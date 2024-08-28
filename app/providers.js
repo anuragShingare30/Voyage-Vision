@@ -7,7 +7,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 
 function Providers({ children }) {
-  const [queryClient] = React.useState(
+  const [queryClient] = React.useState( 
     () =>
       new QueryClient({
         defaultOptions: {
