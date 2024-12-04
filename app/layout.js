@@ -13,7 +13,7 @@ export const metadata = {
 
 
 
-export default function RootLayout({ children }) {
+export default function RootLayout({children}) {
   return (
     <ClerkProvider>
       <html lang="en">
@@ -21,7 +21,6 @@ export default function RootLayout({ children }) {
           <main style={{ fontFamily: "monospace" }}>
             <Providers>{children}</Providers>
           </main>
-
         </body>
       </html>
     </ClerkProvider>

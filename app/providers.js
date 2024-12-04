@@ -18,7 +18,7 @@ function Providers({ children }) {
           },
         },
       })
-  );
+  ); 
 
   return (
     <QueryClientProvider client={queryClient}>
